@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/components/custom_bottom_tab.dart';
 import 'package:testapp/screens/home/components/body.dart';
-import 'package:testapp/screens/movie/movie_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       elevation: 0.3,
       backgroundColor: Colors.white,
       title: const Text(
-        "MovieZ  ",
+        "MovieZ",
         style: TextStyle(
             color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
       ),

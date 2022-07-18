@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/screens/chat/chat_screen.dart';
-import 'package:testapp/screens/discover/favorite_screen.dart';
+import 'package:testapp/screens/discover/discover_screen.dart';
 import 'package:testapp/screens/home/home_screen.dart';
 import 'package:testapp/screens/profile/profile_screen.dart';
 
@@ -18,7 +18,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    FavoriteScreen(),
+    DiscoverScreen(),
     ChatScreen(),
     ProfileScreen(),
   ];

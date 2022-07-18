@@ -3,7 +3,6 @@
 //     final movieList = movieListFromJson(jsonString);
 
 import 'dart:convert';
-
 import 'package:testapp/model/movie.dart';
 
 MovieList movieListFromJson(String str) => MovieList.fromJson(json.decode(str));

@@ -12,7 +12,7 @@ class SectionWithButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.symmetric(
           horizontal: kDefaultPadding, vertical: kDefaultPadding / 2),
       child: Row(

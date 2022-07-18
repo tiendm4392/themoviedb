@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/model/movie.dart';
 import 'package:testapp/network/network_request.dart';
+import 'package:testapp/screens/home/components/movie_row.dart';
 import 'package:testapp/screens/movie/movie_screen.dart';
 import '../../../components/sectrion_with_button.dart';
 
@@ -28,7 +29,7 @@ class _BodyState extends State<Body> {
     getMovies();
   }
 
-  getMovies() async {
+  Future getMovies() async {
     var results =
         await NetworkRequest.getMovies(param: "trending", time: "day");
     var action =
@@ -56,37 +57,49 @@ class _BodyState extends State<Body> {
 
     final List<Widget> imageSliders = movieData!
         .map(
-          (item) => Container(
-            margin: const EdgeInsets.all(10),
-            width: 1000,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              image: DecorationImage(
-                image: NetworkImage(
-                  "https://image.tmdb.org/t/p/original${item.backdropPath}",
+          (item) => GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MovieScreen(
+                          movie: item,
+                        )),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              width: 1000,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    "https://image.tmdb.org/t/p/original${item.backdropPath}",
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                fit: BoxFit.cover,
               ),
-            ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4),
-                        borderRadius: const BorderRadius.vertical(
-                            bottom: Radius.circular(10)),
-                      ),
-                      padding: const EdgeInsets.all(10),
-                      child: Center(
-                        child: Text(
-                          item.title,
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: const BorderRadius.vertical(
+                              bottom: Radius.circular(10)),
                         ),
-                      ))
-                ]) /* add child content here */,
+                        padding: const EdgeInsets.all(10),
+                        child: Center(
+                          child: Text(
+                            item.title,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ))
+                  ]) /* add child content here */,
+            ),
           ),
         )
         .toList();
@@ -132,80 +145,16 @@ class _BodyState extends State<Body> {
             ],
           ),
           const SectionWithButton(title: "Action"),
-          SizedBox(
-              height: 200.0,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: actionMovie?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ActionList(
-                        image: actionMovie![index].posterPath,
-                        movie: actionMovie![index]);
-                  })),
+          MovieRow(movieType: actionMovie),
           const SectionWithButton(title: "Animation"),
-          SizedBox(
-              height: 200.0,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: animationMovie?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ActionList(
-                        image: animationMovie![index].posterPath,
-                        movie: animationMovie![index]);
-                  })),
+          MovieRow(movieType: animationMovie),
           const SectionWithButton(title: "Horror"),
-          SizedBox(
-              height: 200.0,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: tvShow?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ActionList(
-                      image: tvShow![index].posterPath,
-                      movie: tvShow![index],
-                    );
-                  })),
+          Padding(
+            padding: const EdgeInsets.only(bottom: kDefaultPadding),
+            child: MovieRow(movieType: tvShow),
+          ),
         ]),
       )),
-    );
-  }
-}
-
-class ActionList extends StatelessWidget {
-  const ActionList({
-    Key? key,
-    required this.image,
-    required this.movie,
-  }) : super(key: key);
-
-  final String image;
-  final Movie movie;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MovieScreen(
-                    movie: movie,
-                  )),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
-        margin: const EdgeInsets.only(left: kDefaultPadding),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(kDefaultPadding / 2),
-          child: Image.network(
-            "https://image.tmdb.org/t/p/original$image",
-            width: 120,
-            height: 180,
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
     );
   }
 }

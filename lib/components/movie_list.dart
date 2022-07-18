@@ -1,70 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/model/movie.dart';
-import 'package:testapp/network/network_request.dart';
+import 'package:testapp/screens/movie/movie_screen.dart';
 
-class FavoriteScreen extends StatefulWidget {
-  const FavoriteScreen({Key? key}) : super(key: key);
+class MovieList extends StatelessWidget {
+  const MovieList({
+    Key? key,
+    required this.isLoaded,
+    required this.movieData,
+  }) : super(key: key);
 
-  @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
-}
-
-class _FavoriteScreenState extends State<FavoriteScreen> {
-  List<Movie>? movieData;
-
-  var isLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    getMovies();
-  }
-
-  getMovies() async {
-    movieData = await NetworkRequest.getMovies(param: "discover");
-    if (movieData != null) {
-      if (mounted) {
-        setState(() {
-          isLoaded = true;
-        });
-      }
-    }
-  }
+  final bool isLoaded;
+  final List<Movie>? movieData;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: Visibility(
-        visible: isLoaded,
-        // ignore: sort_child_properties_last
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: ListView.builder(
-              itemCount: movieData?.length,
-              itemBuilder: (BuildContext context, int index) {
-                return MovieItem(
-                    image: movieData?[index].posterPath,
-                    title: movieData?[index].originalTitle,
-                    date: movieData?[index].releaseDate.toString(),
-                    rate: movieData?[index].voteAverage.toString());
-                // return Text('cc');
-              }),
-        ),
-        replacement: const Center(child: CircularProgressIndicator()),
+    return Visibility(
+      visible: isLoaded,
+      // ignore: sort_child_properties_last
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.builder(
+            itemCount: movieData?.length,
+            itemBuilder: (BuildContext context, int index) {
+              return MovieItem(
+                  movie: movieData?[index],
+                  image: movieData?[index].posterPath,
+                  title: movieData?[index].originalTitle,
+                  date: movieData?[index].releaseDate.toString(),
+                  rate: movieData?[index].voteAverage.toString());
+              // return Text('cc');
+            }),
       ),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      elevation: 0.4,
-      backgroundColor: Colors.white,
-      title: const Text(
-        "Discover",
-        style: headerText,
-      ),
+      replacement: const Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -76,9 +44,11 @@ class MovieItem extends StatelessWidget {
     required this.title,
     required this.date,
     required this.rate,
+    required this.movie,
   }) : super(key: key);
 
   final String? image, title, date, rate;
+  final Movie? movie;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +57,13 @@ class MovieItem extends StatelessWidget {
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: GestureDetector(
         onTap: () {
-          print('movie');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MovieScreen(
+                      movie: movie!,
+                    )),
+          );
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
