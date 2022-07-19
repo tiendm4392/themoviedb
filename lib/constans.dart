@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const kPrimaryColor = Color(0xFF046865);
-const kLightBlueColor = Color(0xFF21A0A0);
+const kLightGreenColor = Color(0xFF21A0A0);
 const kGrayColor = Color(0xFFEEEEEE);
 
 const double kDefaultPadding = 20.0;

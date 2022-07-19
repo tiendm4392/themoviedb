@@ -4,9 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/model/movie.dart';
 import 'package:testapp/network/network_request.dart';
+import 'package:testapp/screens/discover/discover_screen.dart';
 import 'package:testapp/screens/home/components/movie_row.dart';
 import 'package:testapp/screens/movie/movie_screen.dart';
-import '../../../components/sectrion_with_button.dart';
+import '../../../components/section_with_button.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -42,12 +43,10 @@ class _BodyState extends State<Body> {
     animationMovie = animation?.sublist(0, 11);
     actionMovie = action?.sublist(0, 11);
     movieData = results?.sublist(0, 5);
-    if (movieData != null && actionMovie != null) {
-      if (mounted) {
-        setState(() {
-          isLoaded = true;
-        });
-      }
+    if (movieData != null && actionMovie != null && mounted) {
+      setState(() {
+        isLoaded = true;
+      });
     }
   }
 
@@ -109,14 +108,24 @@ class _BodyState extends State<Body> {
       replacement: const Center(child: CircularProgressIndicator()),
       child: (SingleChildScrollView(
         child: Column(children: [
-          const SectionWithButton(
+          SectionWithButton(
             title: 'Top Trending',
+            seeAll: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DiscoverScreen(
+                          title: 'Top Trending',
+                          param: 'trending',
+                        )),
+              );
+            },
           ),
           Column(
             children: [
               CarouselSlider(
                 options: CarouselOptions(
-                    autoPlay: false,
+                    autoPlay: true,
                     aspectRatio: 2.0,
                     enlargeCenterPage: true,
                     onPageChanged: (index, reason) {
@@ -144,11 +153,20 @@ class _BodyState extends State<Body> {
               ),
             ],
           ),
-          const SectionWithButton(title: "Action"),
+          const SectionNavigate(
+            title: 'Action',
+            genres: '28',
+          ),
           MovieRow(movieType: actionMovie),
-          const SectionWithButton(title: "Animation"),
+          const SectionNavigate(
+            title: 'Animation',
+            genres: '16',
+          ),
           MovieRow(movieType: animationMovie),
-          const SectionWithButton(title: "Horror"),
+          const SectionNavigate(
+            title: 'Honor',
+            genres: '27',
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: kDefaultPadding),
             child: MovieRow(movieType: tvShow),
@@ -156,5 +174,31 @@ class _BodyState extends State<Body> {
         ]),
       )),
     );
+  }
+}
+
+class SectionNavigate extends StatelessWidget {
+  const SectionNavigate({
+    Key? key,
+    required this.title,
+    required this.genres,
+  }) : super(key: key);
+
+  final String title, genres;
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionWithButton(
+        title: title,
+        seeAll: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DiscoverScreen(
+                      title: title,
+                      genres: genres,
+                    )),
+          );
+        });
   }
 }

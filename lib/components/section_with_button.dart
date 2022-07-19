@@ -5,9 +5,11 @@ class SectionWithButton extends StatelessWidget {
   const SectionWithButton({
     Key? key,
     required this.title,
+    required this.seeAll,
   }) : super(key: key);
 
   final String title;
+  final Function seeAll;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class SectionWithButton extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              print('See all');
+              seeAll();
             },
             child: const Text(
               "See all",
