@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/model/movie.dart';
+import 'package:testapp/model/movie_management.dart';
 import 'package:testapp/network/network_request.dart';
 import 'package:testapp/screens/movie/movie_screen.dart';
+import 'package:provider/provider.dart';
 
 class MovieList extends StatefulWidget {
   const MovieList({
@@ -18,44 +20,49 @@ class MovieList extends StatefulWidget {
 }
 
 class _MovieListState extends State<MovieList> {
-  List<Movie>? movieData;
+  // List<Movie>? movieData;
   TextEditingController controller = TextEditingController();
-  var isLoaded = false;
-
+  var isLoaded = true;
+  var scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-    getMovies();
+    // getMovies();
+    final moviesData = Provider.of<MoviesManagement>(context, listen: false);
+    moviesData.getMovieListData(reset: true);
   }
 
-  getMovies() async {
-    if (widget.param != null) {
-      movieData =
-          await NetworkRequest.getMovies(param: widget.param, time: "day");
-    } else {
-      movieData = await NetworkRequest.getMovies(genres: widget.genres);
-    }
-    if (movieData != null && mounted) {
-      setState(() {
-        isLoaded = true;
-      });
-    }
-  }
+  // getMovies() async {
+  //   if (widget.param != null) {
+  //     movieData =
+  //         await NetworkRequest.getMovies(param: widget.param, time: "day");
+  //   } else {
+  //     movieData = await NetworkRequest.getMovies(genres: widget.genres);
+  //   }
+  //   if (movieData != null && mounted) {
+  //     setState(() {
+  //       isLoaded = true;
+  //     });
+  //   }
+  // }
 
-  searchMovie(value) async {
-    if (value != null) {
-      setState(() {
-        isLoaded = false;
-      });
-      movieData = await NetworkRequest.searchMovies(query: value);
-      setState(() {
-        isLoaded = true;
-      });
-    }
-  }
+  // searchMovie(value) async {
+  //   if (value != null) {
+  //     setState(() {
+  //       isLoaded = false;
+  //     });
+  //     movieData = await NetworkRequest.searchMovies(query: value);
+  //     setState(() {
+  //       isLoaded = true;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final movieModel = Provider.of<MoviesManagement>(context);
+    final movieData = movieModel.movies;
+
     return Column(
       children: [
         Visibility(
@@ -80,7 +87,8 @@ class _MovieListState extends State<MovieList> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           controller.text = "";
-                          getMovies();
+                          // getMovies();
+                          movieModel.getMovieListData(reset: false);
                         },
                         icon: const Icon(Icons.clear, color: kLightGreenColor),
                       ),
@@ -90,7 +98,7 @@ class _MovieListState extends State<MovieList> {
                     // },
                     controller: controller,
                     onSubmitted: (value) {
-                      searchMovie(value);
+                      // searchMovie(value);
                     },
                   ),
                 ),
@@ -107,26 +115,34 @@ class _MovieListState extends State<MovieList> {
               child:
                   // ignore: prefer_is_empty
                   movieData?.length != 0
-                      ? ListView.builder(
-                          // shrinkWrap: true,
-                          // physics: const ScrollPhysics(),
-                          itemCount: movieData?.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: index+1 == movieData?.length
-                                      ? kDefaultPadding
-                                      : 0),
-                              child: MovieItem(
-                                  movie: movieData?[index],
-                                  image: movieData?[index].posterPath,
-                                  title: movieData?[index].originalTitle,
-                                  date:
-                                      movieData?[index].releaseDate.toString(),
-                                  rate:
-                                      movieData?[index].voteAverage.toString()),
-                            );
-                          })
+                      ? RefreshIndicator(
+                          onRefresh: () async {
+                            movieModel.getMovieListData(reset: false);
+                            print('haha');
+                          },
+                          child: ListView.builder(
+                              // shrinkWrap: true,
+                              // physics: const ScrollPhysics(),
+                              itemCount: movieData?.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: index + 1 == movieData?.length
+                                          ? kDefaultPadding
+                                          : 0),
+                                  child: MovieItem(
+                                      movie: movieData?[index],
+                                      image: movieData?[index].posterPath,
+                                      title: movieData?[index].originalTitle,
+                                      date: movieData?[index]
+                                          .releaseDate
+                                          .toString(),
+                                      rate: movieData?[index]
+                                          .voteAverage
+                                          .toString()),
+                                );
+                              }),
+                        )
                       : const Center(
                           child: Text(
                           "No movie found",

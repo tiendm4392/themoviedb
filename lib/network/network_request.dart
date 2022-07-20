@@ -9,16 +9,38 @@ class NetworkRequest {
   static Future<List<Movie>?> getMovies(
       {String? param = 'discover',
       String? time = '',
-      String? genres = ''}) async {
+      String? genres = '',
+      int? page = 1
+      }) async {
     var client = http.Client();
-    var urlString =
-        Uri.parse('$url$param/movie/$time$token&with_genres=$genres');
+    var urlString = Uri.parse(
+        '$url$param/movie/$time$token&with_genres=$genres&page=$page&include_adult=false');
     var response = await client.get(urlString);
 
     if (response.statusCode == 200) {
       var json = response.body;
       var data = movieListFromJson(json);
       return data.results;
+    } else {
+      throw ('error');
+    }
+  }
+
+  static Future<MovieList>? fetchMoviesData(
+      {String? param = 'discover',
+      String? time = '',
+      String? genres = '',
+      int? page = 1
+      }) async {
+    var client = http.Client();
+    var urlString = Uri.parse(
+        '$url$param/movie/$time$token&with_genres=$genres&page=$page&include_adult=false');
+    var response = await client.get(urlString);
+
+    if (response.statusCode == 200) {
+      var json = response.body;
+      var data = movieListFromJson(json);
+      return data;
     } else {
       throw ('error');
     }
