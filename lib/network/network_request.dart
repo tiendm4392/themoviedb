@@ -10,8 +10,7 @@ class NetworkRequest {
       {String? param = 'discover',
       String? time = '',
       String? genres = '',
-      int? page = 1
-      }) async {
+      int? page = 1}) async {
     var client = http.Client();
     var urlString = Uri.parse(
         '$url$param/movie/$time$token&with_genres=$genres&page=$page&include_adult=false');
@@ -30,8 +29,7 @@ class NetworkRequest {
       {String? param = 'discover',
       String? time = '',
       String? genres = '',
-      int? page = 1
-      }) async {
+      int? page = 1}) async {
     var client = http.Client();
     var urlString = Uri.parse(
         '$url$param/movie/$time$token&with_genres=$genres&page=$page&include_adult=false');
@@ -46,14 +44,16 @@ class NetworkRequest {
     }
   }
 
-  static Future<List<Movie>?> searchMovies({String? query = ''}) async {
+  static Future<MovieList>? searchMovies(
+      {String? query = '', int? page = 1}) async {
     var client = http.Client();
-    var urlString = Uri.parse('${url}search/movie$token&query=$query');
+    var urlString = Uri.parse(
+        '${url}search/movie$token&query=$query&page=$page&include_adult=false');
     var response = await client.get(urlString);
     if (response.statusCode == 200) {
       var json = response.body;
       var data = movieListFromJson(json);
-      return data.results;
+      return data;
     } else {
       throw ('error');
     }

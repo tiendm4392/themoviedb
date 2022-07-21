@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/components/movie_list.dart';
+import 'package:testapp/screens/discover/components/body.dart';
 import 'package:testapp/constans.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({Key? key, this.param, this.genres, this.title})
       : super(key: key);
   final String? param, genres, title;
+  static String routeName = "/discover";
 
   @override
   State<DiscoverScreen> createState() => _DiscoverScreenState();
@@ -17,8 +18,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     return Scaffold(
       appBar: buildAppBar(),
       body: widget.param != null
-          ? MovieList(param: widget.param)
-          : MovieList(genres: widget.genres),
+          ? Body(param: widget.param)
+          : Body(genres: widget.genres),
     );
   }
 

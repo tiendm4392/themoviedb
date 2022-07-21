@@ -7,6 +7,7 @@ import 'package:testapp/screens/profile/profile_screen.dart';
 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
+  static String routeName = "/";
 
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
@@ -14,8 +15,6 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
-  // static const TextStyle optionStyle =
-  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     DiscoverScreen(),

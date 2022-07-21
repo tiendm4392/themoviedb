@@ -4,35 +4,36 @@ import 'package:testapp/model/movie_list.dart';
 import 'package:testapp/network/network_request.dart';
 
 class MoviesManagement extends ChangeNotifier {
-  // late MoviesManagement _movieList;
-
   final MovieList _movie =
       MovieList(totalPages: 1, results: [], page: 1, totalResults: 1);
-
-  // MoviesManagement get movieList => _movieList;
-
-  // set moviesList(MoviesManagement newMovies) {
-  //   _movieList = newMovies;
-  //   notifyListeners();
-  // }
+  String _keyWord = "";
 
   List<Movie> get movies => _movie.results;
-
   int get currentPage => _movie.page;
-
-  void loadMore(List<Movie> movie) {
-    _movie.results.addAll(movie);
-
-    notifyListeners();
-  }
+  String get currentKeyWord => _keyWord;
 
   getMovieListData({bool reset = false}) async {
-    _movie.page = reset ? _movie.page : _movie.page + 1;
-    final result = (await NetworkRequest.fetchMoviesData(page: _movie.page)!);
+    _keyWord = '';
+    var currentPage = reset ? 1 : _movie.page + 1;
+    final result = (await NetworkRequest.fetchMoviesData(page: currentPage)!);
     _movie.totalPages = result.totalPages;
     _movie.page = result.page;
     _movie.totalResults = result.totalResults;
-    _movie.results.addAll(result.results);
+    _movie.results =
+        reset ? result.results : [..._movie.results, ...result.results];
+    notifyListeners();
+  }
+
+  searchMovieListData({bool reset = false, String? query = ''}) async {
+    _keyWord = query!;
+    var currentPage = reset ? 1 : _movie.page + 1;
+    final result =
+        (await NetworkRequest.searchMovies(page: currentPage, query: query)!);
+    _movie.totalPages = result.totalPages;
+    _movie.page = result.page;
+    _movie.totalResults = result.totalResults;
+    _movie.results =
+        reset ? result.results : [..._movie.results, ...result.results];
     notifyListeners();
   }
 }

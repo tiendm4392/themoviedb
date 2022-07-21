@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
+import 'package:testapp/model/home_management.dart';
 import 'package:testapp/model/movie_management.dart';
+import 'package:testapp/routes.dart';
 import 'components/custom_bottom_tab.dart';
 
 void main() {
@@ -16,7 +18,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<MoviesManagement>(create: (context) => MoviesManagement()),
+        ChangeNotifierProvider<MoviesManagement>(
+            create: (context) => MoviesManagement()),
+        ChangeNotifierProvider<HomeManagement>(
+            create: (context) => HomeManagement()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -27,9 +32,8 @@ class MyApp extends StatelessWidget {
           textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        // home: const MyStatefulWidget(),
-        initialRoute: '/',
-        routes: {'/': (context) => const MyStatefulWidget()},
+        initialRoute: MyStatefulWidget.routeName,
+        routes: routes,
       ),
     );
   }

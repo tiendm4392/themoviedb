@@ -1,9 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
-import 'package:testapp/model/movie.dart';
-import 'package:testapp/network/network_request.dart';
+import 'package:testapp/model/home_management.dart';
 import 'package:testapp/screens/discover/discover_screen.dart';
 import 'package:testapp/screens/home/components/movie_row.dart';
 import 'package:testapp/screens/movie/movie_screen.dart';
@@ -17,33 +16,25 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  List<Movie>? movieData = [];
-  List<Movie>? actionMovie = [];
-  List<Movie>? animationMovie = [];
-  List<Movie>? tvShow = [];
+  late HomeManagement homeData;
   int _current = 0;
-  var isLoaded = false;
+  late bool isLoaded;
 
   @override
   void initState() {
     super.initState();
+    homeData = Provider.of<HomeManagement>(context, listen: false);
     getMovies();
   }
 
-  Future getMovies() async {
-    var results =
-        await NetworkRequest.getMovies(param: "trending", time: "day");
-    var action =
-        await NetworkRequest.getMovies(param: "discover", genres: "28");
-    var animation =
-        await NetworkRequest.getMovies(param: "discover", genres: "16");
-    var tvShowResult =
-        await NetworkRequest.getMovies(param: "discover", genres: "27");
-    tvShow = tvShowResult?.sublist(0, 11);
-    animationMovie = animation?.sublist(0, 11);
-    actionMovie = action?.sublist(0, 11);
-    movieData = results?.sublist(0, 5);
-    if (movieData != null && actionMovie != null && mounted) {
+  getMovies() async {
+    if (mounted) {
+      if (homeData.getTrendingMovie.isEmpty) {
+        setState(() {
+          isLoaded = false;
+        });
+        await homeData.fetchAllCategory();
+      }
       setState(() {
         isLoaded = true;
       });
@@ -52,9 +43,9 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
+    var homeModel = Provider.of<HomeManagement>(context, listen: true);
 
-    final List<Widget> imageSliders = movieData!
+    final List<Widget> imageSliders = homeModel.getTrendingMovie
         .map(
           (item) => GestureDetector(
             onTap: () {
@@ -137,7 +128,8 @@ class _BodyState extends State<Body> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: movieData!.asMap().entries.map((entry) {
+                children:
+                    homeModel.getTrendingMovie.asMap().entries.map((entry) {
                   return Container(
                     width: 8.0,
                     height: 8.0,
@@ -157,19 +149,19 @@ class _BodyState extends State<Body> {
             title: 'Action',
             genres: '28',
           ),
-          MovieRow(movieType: actionMovie),
+          MovieRow(movieType: homeModel.getActionMovie),
           const SectionNavigate(
             title: 'Animation',
             genres: '16',
           ),
-          MovieRow(movieType: animationMovie),
+          MovieRow(movieType: homeModel.getAnimationMovie),
           const SectionNavigate(
             title: 'Honor',
             genres: '27',
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: kDefaultPadding),
-            child: MovieRow(movieType: tvShow),
+            child: MovieRow(movieType: homeModel.getTvShow),
           ),
         ]),
       )),
