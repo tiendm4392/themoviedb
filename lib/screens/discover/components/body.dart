@@ -37,15 +37,18 @@ class _BodyState extends State<Body> {
   }
 
   getMovies() async {
-    if (moviesData.movies.isEmpty && controller.text == '') {
+    if (mounted) {
+      if ((moviesData.movies.isEmpty && controller.text == '') ||
+          moviesData.currentGenres != widget.genres) {
+        setState(() {
+          isLoaded = false;
+        });
+        await moviesData.getMovieListData(reset: true, genres: widget.genres);
+      }
       setState(() {
-        isLoaded = false;
+        isLoaded = true;
       });
-      await moviesData.getMovieListData(reset: true);
     }
-    setState(() {
-      isLoaded = true;
-    });
   }
 
   resetSearch() async {
@@ -53,7 +56,7 @@ class _BodyState extends State<Body> {
       setState(() {
         isLoaded = false;
       });
-      await moviesData.getMovieListData(reset: true);
+      await moviesData.getMovieListData(reset: true, genres: widget.genres);
     }
     setState(() {
       isLoaded = true;
@@ -76,13 +79,13 @@ class _BodyState extends State<Body> {
     if (controller.text != '') {
       await moviesData.searchMovieListData(reset: true, query: controller.text);
     } else {
-      await moviesData.getMovieListData(reset: true);
+      await moviesData.getMovieListData(reset: true, genres: widget.genres);
     }
   }
 
   loadMore() {
     if (controller.text == "") {
-      moviesData.getMovieListData(reset: false);
+      moviesData.getMovieListData(reset: false, genres: widget.genres);
     } else {
       moviesData.searchMovieListData(query: controller.text);
     }
@@ -96,7 +99,7 @@ class _BodyState extends State<Body> {
     return Column(
       children: [
         Visibility(
-          visible: widget.param == null && widget.genres == null,
+          visible: widget.genres == '',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -189,5 +192,3 @@ class _BodyState extends State<Body> {
     );
   }
 }
-
-

@@ -116,7 +116,7 @@ class _BodyState extends State<Body> {
             children: [
               CarouselSlider(
                 options: CarouselOptions(
-                    autoPlay: true,
+                    autoPlay: false,
                     aspectRatio: 2.0,
                     enlargeCenterPage: true,
                     onPageChanged: (index, reason) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/components/custom_bottom_tab.dart';
+import 'package:testapp/screens/authentication/signIn/sign_in.dart';
 import 'package:testapp/screens/chat/components/chatting_room.dart';
 import 'package:testapp/screens/chat/components/waiting_room.dart';
 import 'package:testapp/screens/discover/discover_screen.dart';
@@ -10,6 +11,7 @@ final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => const HomeScreen(),
   DiscoverScreen.routeName: (context) => const DiscoverScreen(),
   WaitingRoom.routeName: (context) => const WaitingRoom(),
+  SignIn.routeName:(context) => const SignIn(),
     ChattingRoom.routeName: (context) => const ChattingRoom(
         message: '',
         name: '',

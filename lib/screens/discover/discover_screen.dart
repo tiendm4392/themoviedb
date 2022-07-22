@@ -17,9 +17,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: widget.param != null
-          ? Body(param: widget.param)
-          : Body(genres: widget.genres),
+      body: Body(genres: widget.genres ?? ''),
     );
   }
 
@@ -30,7 +28,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       ),
       elevation: 0.4,
       backgroundColor: Colors.white,
-      title:  Text(
+      title: Text(
         widget.title ?? "Discover",
         style: headerText,
       ),
