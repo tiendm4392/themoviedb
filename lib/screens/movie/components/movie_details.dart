@@ -29,7 +29,9 @@ class MovieDetails extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: kDefaultPadding / 2),
-          child: Text(widget.movie.releaseDate.toString().substring(0, 11)),
+          child: Text(widget.movie.releaseDate != ''
+              ? widget.movie.releaseDate!
+              : 'unknown'),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: kDefaultPadding / 2),

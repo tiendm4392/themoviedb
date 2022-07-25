@@ -37,18 +37,25 @@ class MovieItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: CachedNetworkImage(
-                width: 95,
-                height: 120,
-                fit: BoxFit.cover,
-                imageUrl: 'https://image.tmdb.org/t/p/original/$image',
-                placeholder: (context, url) => Container(
-                  decoration: const BoxDecoration(
-                    color: kGrayColor,
-                  ),
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
+              child: image != ''
+                  ? CachedNetworkImage(
+                      width: 95,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      imageUrl: 'https://image.tmdb.org/t/p/original/$image',
+                      placeholder: (context, url) => Container(
+                        decoration: const BoxDecoration(
+                          color: kGrayColor,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    )
+                  : Container(
+                      height: 120,
+                      width: 95,
+                      color: kGrayColor,
+                    ),
             ),
             Container(
               width: size.width / 1.8,
@@ -69,7 +76,7 @@ class MovieItem extends StatelessWidget {
                     "Release Date",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(date!.substring(0, 10)),
+                  Text(date == '' ? 'unknown' : date!),
                   const Text(
                     "Average Rating",
                     style: TextStyle(fontWeight: FontWeight.bold),

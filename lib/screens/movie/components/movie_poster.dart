@@ -7,12 +7,10 @@ class MoviePoster extends StatelessWidget {
     Key? key,
     required this.size,
     required this.widget,
-
   }) : super(key: key);
 
   final Size size;
   final Body widget;
-
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +23,14 @@ class MoviePoster extends StatelessWidget {
           decoration: BoxDecoration(
             // borderRadius: BorderRadius.circular(10.0),
             color: kGrayColor,
-            image: DecorationImage(
-              image: NetworkImage(
-                "https://image.tmdb.org/t/p/original${widget.movie.backdropPath}",
-              ),
-              fit: BoxFit.cover,
-            ),
+            image: widget.movie.backdropPath != ''
+                ? DecorationImage(
+                    image: NetworkImage(
+                      "https://image.tmdb.org/t/p/original${widget.movie.backdropPath}",
+                    ),
+                    fit: BoxFit.cover,
+                  )
+                : null,
           ),
         ),
         Positioned(
@@ -46,12 +46,14 @@ class MoviePoster extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   color: kGrayColor,
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      "https://image.tmdb.org/t/p/original${widget.movie.posterPath}",
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                  image: widget.movie.posterPath != ''
+                      ? DecorationImage(
+                          image: NetworkImage(
+                            "https://image.tmdb.org/t/p/original${widget.movie.posterPath}",
+                          ),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -62,14 +64,12 @@ class MoviePoster extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: kDefaultPadding / 2),
+                padding: const EdgeInsets.only(left: kDefaultPadding / 2),
                 child: SizedBox(
                   width: size.width / 1.6,
                   height: 80,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: kDefaultPadding / 2),
+                    padding: const EdgeInsets.only(top: kDefaultPadding / 2),
                     child: Text(widget.movie.title, style: titleText),
                   ),
                 ),

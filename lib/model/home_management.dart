@@ -16,12 +16,9 @@ class HomeManagement extends ChangeNotifier {
   fetchAllCategory() async {
     final trending =
         (await NetworkRequest.getMovies(param: "trending", time: "day"))!;
-    final action =
-        (await NetworkRequest.getMovies(genres: "28"))!;
-    final animation =
-        (await NetworkRequest.getMovies(genres: "16"))!;
-    final tvShow =
-        (await NetworkRequest.getMovies(genres: "27"))!;
+    final action = (await NetworkRequest.getMovies(genres: "28"))!;
+    final animation = (await NetworkRequest.getMovies(genres: "16"))!;
+    final tvShow = (await NetworkRequest.getMovies(genres: "27"))!;
     _trendingMovie = [...trending].sublist(0, 5);
     _actionMovie = [...action].sublist(0, 11);
     _animationMovie = [...animation].sublist(0, 11);

@@ -99,7 +99,7 @@ class _BodyState extends State<Body> {
     return Column(
       children: [
         Visibility(
-          visible: widget.genres == '',
+          visible: widget.genres == '' && widget.param != 'trending',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -148,8 +148,6 @@ class _BodyState extends State<Body> {
                       ? RefreshIndicator(
                           onRefresh: () => reload(),
                           child: ListView.builder(
-                              // shrinkWrap: true,
-                              // physics: const ScrollPhysics(),
                               controller: scrollController,
                               itemCount: movieData.length + 1,
                               itemBuilder: (BuildContext context, int index) {
@@ -163,9 +161,9 @@ class _BodyState extends State<Body> {
                                         movie: movieData[index],
                                         image: movieData[index].posterPath,
                                         title: movieData[index].originalTitle,
-                                        date: movieData[index]
-                                            .releaseDate
-                                            .toString(),
+                                        date: movieData[index].releaseDate != ''
+                                            ? movieData[index].releaseDate
+                                            : movieData[index].firstAirDate,
                                         rate: movieData[index]
                                             .voteAverage
                                             .toString()),

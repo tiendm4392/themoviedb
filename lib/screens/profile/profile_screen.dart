@@ -3,7 +3,7 @@ import 'package:testapp/screens/authentication/signIn/sign_in.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
-
+  static String routeName = '/profile';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -17,7 +17,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: Body(genres: widget.genres ?? ''),
+      body: Body(genres: widget.genres ?? '', param: widget.param,),
     );
   }
 
