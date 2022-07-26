@@ -1,10 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/components/custom_bottom_tab.dart';
+import 'package:testapp/components/password_field.dart';
 import 'package:testapp/constans.dart';
+import 'package:testapp/network/firebase.dart';
 import 'package:testapp/screens/authentication/signUp/sign_up_screen.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
   static String routeName = '/signIn';
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  TextEditingController userName = TextEditingController();
+  TextEditingController password = TextEditingController();
+  bool showPassword = false;
+
+  _signInUser() async {
+    if (userName.text != '' && password.text != '') {
+      await FirebaseRequest.signIn(
+          emailAddress: userName.text, password: password.text);
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const MyStatefulWidget(
+                  initRoute: 3,
+                )),
+        (Route<dynamic> route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,24 +43,26 @@ class SignIn extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
               child: TextField(
-                decoration: InputDecoration(
+                controller: userName,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email or phone number',
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
+            PasswordField(
+              showPassword: showPassword,
+              controller: password,
+              title: 'Password',
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
             ),
             Padding(
               padding:
@@ -41,7 +72,9 @@ class SignIn extends StatelessWidget {
                   minimumSize: const Size.fromHeight(
                       60), // fromHeight use double.infinity as width and 40 is the height
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _signInUser();
+                },
                 child: const Text('Sign In',
                     style: TextStyle(
                         color: Colors.white,
@@ -84,3 +117,5 @@ class SignIn extends StatelessWidget {
     );
   }
 }
+
+

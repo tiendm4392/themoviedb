@@ -15,7 +15,7 @@ class MovieItem extends StatelessWidget {
   }) : super(key: key);
 
   final String? image, title, date, rate;
-  final Movie? movie;
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +23,13 @@ class MovieItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => MovieScreen(
-                      movie: movie!,
+                      movie: movie,
                     )),
           );
         },

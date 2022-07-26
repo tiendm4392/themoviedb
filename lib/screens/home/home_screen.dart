@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
             
           },
           icon: const Icon(
-            Icons.notifications_none,
+            Icons.notifications,
             color: Colors.black,
           ),
         ),

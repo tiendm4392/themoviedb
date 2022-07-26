@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseRequest {
-  static Future signUp({required String emailAddress, required String password}) async {
+  static Future signUp(
+      {required String emailAddress, required String password}) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
@@ -18,7 +19,8 @@ class FirebaseRequest {
     }
   }
 
-  static Future signIn({required String emailAddress, required String password}) async {
+  static Future signIn(
+      {required String emailAddress, required String password}) async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
@@ -28,6 +30,20 @@ class FirebaseRequest {
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
       }
+    }
+  }
+
+  static userStatus() {
+    try {
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null) {
+          print('User is currently signed out!');
+        } else {
+          print(user);
+        }
+      });
+    } catch (e) {
+      print(e);
     }
   }
 }

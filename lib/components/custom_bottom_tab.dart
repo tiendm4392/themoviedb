@@ -6,15 +6,16 @@ import 'package:testapp/screens/home/home_screen.dart';
 import 'package:testapp/screens/profile/profile_screen.dart';
 
 class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+  const MyStatefulWidget({Key? key, this.initRoute}) : super(key: key);
   static String routeName = "/";
+  final int? initRoute;
 
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  int _selectedIndex = 0;
+  late int _selectedIndex = widget.initRoute ?? 0;
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     DiscoverScreen(),

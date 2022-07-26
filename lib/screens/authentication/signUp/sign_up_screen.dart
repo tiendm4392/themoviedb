@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/components/custom_bottom_tab.dart';
+import 'package:testapp/components/password_field.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/network/firebase.dart';
-import 'package:testapp/screens/profile/profile_screen.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -12,26 +13,36 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordConfirmController = TextEditingController();
+  TextEditingController userName = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController passwordConfirm = TextEditingController();
+
+  bool showPassword = false;
+  bool showPasswordConfirm = false;
+
+  _createUser() async {
+    if (userName.text != '' && password.text != '') {
+      await FirebaseRequest.signUp(
+          emailAddress: userName.text, password: password.text);
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const MyStatefulWidget(
+                  initRoute: 3,
+                )),
+        (Route<dynamic> route) => false,
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-    Future<void> createUser() async {
-      if (nameController.text != '' && passwordController.text != '') {
-        await FirebaseRequest.signUp(
-            emailAddress: nameController.text,
-            password: passwordController.text);
-        if (!mounted) return;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
-        );
-      }
-    }
-
     return Scaffold(
       appBar: buildAppBar(),
       body: Container(
@@ -39,34 +50,36 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email or phone number',
                 ),
+                controller: userName,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
+            PasswordField(
+              showPassword: showPassword,
+              controller: password,
+              title: 'Password',
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Confirm Password',
-                ),
-              ),
+            PasswordField(
+              showPassword: showPasswordConfirm,
+              controller: passwordConfirm,
+              title: 'Password Confirm',
+              onPressed: () {
+                setState(() {
+                  showPasswordConfirm = !showPasswordConfirm;
+                });
+              },
             ),
             Padding(
               padding:
@@ -77,7 +90,7 @@ class _SignUpState extends State<SignUp> {
                       60), // fromHeight use double.infinity as width and 40 is the height
                 ),
                 onPressed: () {
-                  createUser();
+                  _createUser();
                 },
                 child: const Text('Sign Up',
                     style: TextStyle(

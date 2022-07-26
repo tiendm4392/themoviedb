@@ -31,21 +31,19 @@ class _BodyState extends State<Body> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MoviePoster(size: size, widget: widget),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding:
+                  Container(
+                    margin:
                         const EdgeInsets.symmetric(vertical: kDefaultPadding),
                     child: Container(
                       height: 50,
                       width: 200,
-                      decoration: const BoxDecoration(
-                          // border: Border(
-                          //     bottom: BorderSide(width: 2, color: kGrayColor)),
-                          color: Colors.white),
+                      decoration: const BoxDecoration(color: Colors.white),
                       child: const TabBar(
                           labelColor: kPrimaryColor,
                           unselectedLabelColor: Colors.black,
@@ -53,19 +51,22 @@ class _BodyState extends State<Body> {
                           tabs: myTabs),
                     ),
                   ),
-                  MovieDetails(widget: widget),
-                  // Expanded(
-                  //   child: TabBarView(
-                  //     children: [
-                  //       const Center(
-                  //           child: Text(
-                  //         "No review",
-                  //         style: headerText,
-                  //       )),
-                  //       MovieDetails(widget: widget),
-                  //     ],
-                  //   ),
-                  // )
+                  SizedBox(
+                    height: 360,
+                    child: TabBarView(
+                      children: [
+                        MovieDetails(widget: widget),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            "No review...",
+                            style: sectionText,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             )
@@ -75,4 +76,3 @@ class _BodyState extends State<Body> {
     );
   }
 }
-
