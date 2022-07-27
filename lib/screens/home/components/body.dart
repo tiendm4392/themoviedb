@@ -35,15 +35,17 @@ class _BodyState extends State<Body> {
         });
         await homeData.fetchAllCategory();
       }
-      setState(() {
-        isLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoaded = true;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var homeModel = Provider.of<HomeManagement>(context, listen: true);
+    var homeModel = Provider.of<HomeManagement>(context, listen: false);
 
     final List<Widget> imageSliders = homeModel.getTrendingMovie
         .map(

@@ -22,7 +22,7 @@ class _SignUpState extends State<SignUp> {
 
   _createUser() async {
     if (userName.text != '' && password.text != '') {
-      await FirebaseRequest.signUp(
+      await FirebaseRequest().signUp(
           emailAddress: userName.text, password: password.text);
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
@@ -44,6 +44,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: buildAppBar(),
       body: Container(
         padding: const EdgeInsets.all(kDefaultPadding),
@@ -99,6 +100,7 @@ class _SignUpState extends State<SignUp> {
                         fontSize: 18)),
               ),
             ),
+            
             Container(
               padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
               child: const Text('Need help?'),

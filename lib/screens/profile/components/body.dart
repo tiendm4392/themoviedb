@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/network/firebase.dart';
 import 'package:testapp/screens/authentication/signIn/sign_in.dart';
@@ -16,18 +18,15 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
-    FirebaseRequest.userStatus();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
-    return
-        // GestureDetector(
-        //     onTap: () {
-        //       Navigator.of(context).push(_createRoute());
-        //     },
-        //     child: const Center(child: Text("profile")));
-        Padding(
+    var user = Provider.of<User?>(context);
+
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -50,11 +49,14 @@ class _BodyState extends State<Body> {
                 const SizedBox(width: 10),
                 GestureDetector(
                   onTap: (() {
+                    if (user != null) {
+                      return;
+                    }
                     Navigator.of(context).push(_createRoute());
                   }),
-                  child: const Text(
-                    'Sign In',
-                    style: TextStyle(
+                  child: Text(
+                    user?.email ?? 'Sign In',
+                    style: const TextStyle(
                         color: kLightGreenColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 18),
@@ -91,30 +93,32 @@ class _BodyState extends State<Body> {
           ),
           ProfileItem(
             icon: Icons.settings,
-            title: 'App setting',
+            title: 'Account setting',
             onPressed: (() {
               print('object');
             }),
           ),
           GestureDetector(
             onTap: (() {
-              print('logout');
+              FirebaseRequest().signOutUser();
             }),
             child: Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  Text(
-                    'Sign Out',
-                    style: sectionText,
-                  ),
-                  SizedBox(width: 10),
-                  Icon(
-                    Icons.logout,
-                  ),
-                ],
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: user != null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Text(
+                          'Sign Out',
+                          style: sectionText,
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.logout,
+                        ),
+                      ],
+                    )
+                  : const SizedBox(height: 21),
             ),
           )
         ],
@@ -141,7 +145,7 @@ class ProfileItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              minimumSize: const Size.fromHeight(60),
+              minimumSize: const Size.fromHeight(50),
               primary: kLightGreenColor),
           onPressed: onPressed,
           child: Row(

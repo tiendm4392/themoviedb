@@ -1,10 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseRequest {
-  static Future signUp(
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Stream<User?> get user {
+    return _auth.authStateChanges();
+  }
+
+  Future<void> signUp(
       {required String emailAddress, required String password}) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
@@ -19,11 +25,11 @@ class FirebaseRequest {
     }
   }
 
-  static Future signIn(
+  Future<void> signIn(
       {required String emailAddress, required String password}) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password);
+      await _auth.signInWithEmailAndPassword(
+          email: emailAddress, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -33,15 +39,9 @@ class FirebaseRequest {
     }
   }
 
-  static userStatus() {
+  Future<void> signOutUser() async {
     try {
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        if (user == null) {
-          print('User is currently signed out!');
-        } else {
-          print(user);
-        }
-      });
+      _auth.signOut();
     } catch (e) {
       print(e);
     }

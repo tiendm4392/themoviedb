@@ -52,7 +52,7 @@ class _BodyState extends State<Body> {
                     ),
                   ),
                   SizedBox(
-                    height: 360,
+                    height: 400,
                     child: TabBarView(
                       children: [
                         MovieDetails(widget: widget),

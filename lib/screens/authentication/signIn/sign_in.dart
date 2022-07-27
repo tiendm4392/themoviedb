@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
 
   _signInUser() async {
     if (userName.text != '' && password.text != '') {
-      await FirebaseRequest.signIn(
+      await FirebaseRequest().signIn(
           emailAddress: userName.text, password: password.text);
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
@@ -37,6 +37,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: buildAppBar(),
       body: Container(
         padding: const EdgeInsets.all(kDefaultPadding),

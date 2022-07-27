@@ -45,9 +45,11 @@ class _BodyState extends State<Body> {
         });
         await moviesData.getMovieListData(reset: true, genres: widget.genres);
       }
-      setState(() {
-        isLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoaded = true;
+        });
+      }
     }
   }
 
