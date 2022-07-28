@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/constans.dart';
 import 'package:testapp/screens/home/components/body.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,8 +20,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       title: const Text(
         "MovieZ",
-        style: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+        style: headerText,
       ),
       actions: [
         IconButton(

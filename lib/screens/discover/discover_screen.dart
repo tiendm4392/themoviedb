@@ -23,10 +23,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   AppBar buildAppBar() {
     return AppBar(
+      centerTitle: true,
       iconTheme: const IconThemeData(
         color: Colors.black, //change your color here
       ),
-      elevation: 0.4,
+      elevation: 0.3,
       backgroundColor: Colors.white,
       title: Text(
         widget.title ?? "Discover",

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testapp/components/custom_bottom_tab.dart';
 import 'package:testapp/components/password_field.dart';
 import 'package:testapp/constans.dart';
-import 'package:testapp/network/firebase.dart';
+import 'package:testapp/network/auth.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _SignUpState extends State<SignUp> {
 
   _createUser() async {
     if (userName.text != '' && password.text != '') {
-      await FirebaseRequest().signUp(
+      await Auth().signUp(
           emailAddress: userName.text, password: password.text);
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(

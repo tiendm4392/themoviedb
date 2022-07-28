@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
-import 'package:testapp/model/home_management.dart';
+import 'package:testapp/model/list_movie_management.dart';
 import 'package:testapp/screens/discover/discover_screen.dart';
 import 'package:testapp/screens/home/components/movie_row.dart';
 import 'package:testapp/screens/movie/movie_screen.dart';
@@ -16,14 +16,14 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  late HomeManagement homeData;
+  late ListMovieManagement homeData;
   int _current = 0;
   late bool isLoaded;
 
   @override
   void initState() {
     super.initState();
-    homeData = Provider.of<HomeManagement>(context, listen: false);
+    homeData = Provider.of<ListMovieManagement>(context, listen: false);
     getMovies();
   }
 
@@ -45,7 +45,7 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    var homeModel = Provider.of<HomeManagement>(context, listen: false);
+    var homeModel = Provider.of<ListMovieManagement>(context, listen: false);
 
     final List<Widget> imageSliders = homeModel.getTrendingMovie
         .map(

@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:testapp/constans.dart';
 import 'package:testapp/model/movie_detail.dart';
-import '../constans.dart';
-import '../model/movie.dart';
-import '../screens/movie/movie_screen.dart';
+import 'package:testapp/screens/movie/components/movie_details.dart';
 
 class MovieItem extends StatelessWidget {
   const MovieItem({
@@ -11,7 +10,7 @@ class MovieItem extends StatelessWidget {
     required this.movie,
   }) : super(key: key);
 
-  final Movie movie;
+  final MovieDetail movie;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +20,13 @@ class MovieItem extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MovieScreen(
-                      movie: movie,
-                    )),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => MovieScreen(
+          //             movie: movie,
+          //           )),
+          // );
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +73,7 @@ class MovieItem extends StatelessWidget {
                     "Release Date",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(movie.releaseDate ?? movie.firstAirDate ?? 'unknown'),
+                  Text(movie.releaseDate),
                   const Text(
                     "Average Rating",
                     style: TextStyle(fontWeight: FontWeight.bold),

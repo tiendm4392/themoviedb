@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testapp/components/custom_bottom_tab.dart';
 import 'package:testapp/components/password_field.dart';
 import 'package:testapp/constans.dart';
-import 'package:testapp/network/firebase.dart';
+import 'package:testapp/network/auth.dart';
 import 'package:testapp/screens/authentication/signUp/sign_up_screen.dart';
 
 class SignIn extends StatefulWidget {
@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
 
   _signInUser() async {
     if (userName.text != '' && password.text != '') {
-      await FirebaseRequest().signIn(
+      await Auth().signIn(
           emailAddress: userName.text, password: password.text);
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
@@ -71,7 +71,7 @@ class _SignInState extends State<SignIn> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(
-                      60), // fromHeight use double.infinity as width and 40 is the height
+                      60),
                 ),
                 onPressed: () {
                   _signInUser();

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/constans.dart';
-import 'package:testapp/screens/authentication/signIn/sign_in.dart';
-import 'components/body.dart';
+import 'package:testapp/screens/bookmark/components/body.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
-  static String routeName = '/profile';
+class BookmarkScreen extends StatelessWidget {
+  const BookmarkScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +18,9 @@ class ProfileScreen extends StatelessWidget {
       elevation: 0.3,
       backgroundColor: Colors.white,
       title: const Text(
-        "Profile",
-        style: headerText,
+        "Bookmark",
+        style: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
       ),
     );
   }

@@ -160,15 +160,8 @@ class _BodyState extends State<Body> {
                                             ? kDefaultPadding
                                             : 0),
                                     child: MovieItem(
-                                        movie: movieData[index],
-                                        image: movieData[index].posterPath,
-                                        title: movieData[index].originalTitle,
-                                        date: movieData[index].releaseDate != ''
-                                            ? movieData[index].releaseDate
-                                            : movieData[index].firstAirDate,
-                                        rate: movieData[index]
-                                            .voteAverage
-                                            .toString()),
+                                      movie: movieData[index],
+                                    ),
                                   );
                                 } else {
                                   return const Padding(
