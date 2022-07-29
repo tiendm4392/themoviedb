@@ -1,6 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'package:testapp/model/movie.dart';
-import 'package:testapp/model/movie_detail.dart';
 import 'package:testapp/model/movie_list.dart';
 
 class NetworkRequest {
@@ -45,7 +44,7 @@ class NetworkRequest {
     }
   }
 
-  static Future<MovieDetail?> fetchMovieData({
+  static Future<Movie?> fetchMovieData({
     required int id,
   }) async {
     var client = http.Client();
@@ -54,7 +53,7 @@ class NetworkRequest {
 
     if (response.statusCode == 200) {
       var json = response.body;
-      var data = movieDetailFromJson(json);
+      var data = movieFromJson(json);
       return data;
     } else {
       throw ('error');

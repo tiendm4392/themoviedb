@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/network/auth.dart';
-import 'package:testapp/network/bookmark.dart';
 import 'package:testapp/screens/authentication/signIn/sign_in.dart';
 
 class Body extends StatefulWidget {
@@ -19,13 +18,7 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
-    // getData();
   }
-
-  // getData() async {
-  //   var data = await Bookmark().getListBookmark();
-  //   print(data.ids);
-  // }
 
   @override
   Widget build(BuildContext context) {

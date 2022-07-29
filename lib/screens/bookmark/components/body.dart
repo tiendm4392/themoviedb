@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testapp/components/movie_item.dart';
 import 'package:testapp/constans.dart';
-import 'package:testapp/model/bookmark.dart';
 import 'package:testapp/model/list_movie_management.dart';
-import 'package:testapp/network/bookmark.dart';
-import 'movie_item.dart';
+import 'package:testapp/screens/authentication/signIn/sign_in.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -14,67 +15,70 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  late ListMovieManagement favoriteData;
-  late bool isLoaded;
+  final _firestore = FirebaseFirestore.instance.collection("movie_bookmark");
+  late ListMovieManagement bookmarkData;
+  late User? user;
 
   @override
   void initState() {
     super.initState();
-    favoriteData = Provider.of<ListMovieManagement>(context, listen: false);
-    getData();
-  }
-
-  getData() async {
-    if (mounted) {
-      setState(() {
-        isLoaded = false;
-      });
-      var data = await Bookmark().getListBookmark();
-      print(data);
-      // getMovies(data.ids);
-      if (mounted) {
-        setState(() {
-          isLoaded = true;
-        });
-      }
+    bookmarkData = Provider.of<ListMovieManagement>(context, listen: false);
+    user = Provider.of<User?>(context, listen: false);
+    if (user != null) {
+      getBookmark(user?.uid);
     }
   }
 
-  getMovies(List<int> ids) async {
-    if (favoriteData.getFavorite.isEmpty) {
-      await favoriteData.fetchBookmark(ids: ids);
+  getBookmark(String? id) async {
+    var docSnapshot = await _firestore.doc(id).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var value = data?['ids'].cast<int>();
+      await bookmarkData.fetchBookmark(ids: value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var result = Provider.of<ListMovieManagement>(context, listen: false);
+    var result = Provider.of<ListMovieManagement>(context);
     var movieData = result.getFavorite;
+    var user = Provider.of<User?>(context);
 
     return Visibility(
-      visible: isLoaded,
-      replacement: const Center(child: CircularProgressIndicator()),
+      visible: user != null,
+      replacement: Center(
+          child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Please ', style: sectionText),
+          GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, SignIn.routeName);
+              },
+              child: const Text(
+                'Sign In',
+                style: TextStyle(
+                    color: kLightGreenColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14),
+              )),
+          const Text(' to use this feature', style: sectionText)
+        ],
+      )),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView.builder(
-            itemCount: movieData.length + 1,
+            itemCount: movieData.length,
             itemBuilder: (BuildContext context, int index) {
-              if (index < movieData.length) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                      bottom:
-                          index + 1 == movieData.length ? kDefaultPadding : 0),
-                  child: MovieItem(
-                    movie: movieData[index],
-                  ),
-                );
-              } else {
-                return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ));
-              }
+              return Padding(
+                padding: EdgeInsets.only(
+                    bottom:
+                        index + 1 == movieData.length ? kDefaultPadding : 0),
+                child: MovieItem(
+                  movie: movieData[index],
+                ),
+              );
             }),
       ),
     );

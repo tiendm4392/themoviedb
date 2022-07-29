@@ -1,14 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:testapp/model/bookmark.dart';
 
 class Bookmark {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _firestore = FirebaseFirestore.instance.collection("movie_bookmark");
 
-  Future<BookmarkList> getListBookmark() async {
-    var snap = await _firestore
-        .collection("movie_bookmark")
-        .doc("DZgYFnUcgfaa7wTdj4Rrj4bdZoJ2")
-        .get();
-    return BookmarkList.fromMap(snap.data()!);
+  Future<void> addBookmark(String id, int movieId) async {
+    var docSnapshot = await _firestore.doc(id).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var value = data?['ids'].cast<int>();
+      _firestore
+          .doc(id)
+          .set({
+            'ids': [...value, movieId],
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    } else {
+      _firestore
+          .doc(id)
+          .set({
+            'ids': [movieId],
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
   }
 }

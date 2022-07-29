@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+Movie movieFromJson(String str) => Movie.fromJson(json.decode(str));
+String movieToJson(Movie data) => json.encode(data.toJson());
+
 class Movie {
   Movie({
     required this.adult,
@@ -9,7 +14,7 @@ class Movie {
     required this.overview,
     required this.posterPath,
     required this.mediaType,
-    required this.genreIds,
+    // required this.genreIds,
     required this.popularity,
     required this.releaseDate,
     required this.video,
@@ -30,7 +35,7 @@ class Movie {
   String overview;
   String posterPath;
   String mediaType;
-  List<int> genreIds;
+  // List<int> genreIds;
   double popularity;
   String? releaseDate;
   bool video;
@@ -51,7 +56,7 @@ class Movie {
         overview: json["overview"],
         posterPath: json["poster_path"] ?? '',
         mediaType: json["media_type"] ?? '',
-        genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
+        // genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         popularity: json["popularity"].toDouble(),
         releaseDate: json["release_date"] ?? '',
         video: json["video"] ?? false,
@@ -73,7 +78,7 @@ class Movie {
         "overview": overview,
         "poster_path": posterPath,
         "media_type": mediaType,
-        "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
+        // "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
         "popularity": popularity,
         "release_date": releaseDate,
         "video": video,

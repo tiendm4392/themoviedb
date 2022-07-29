@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:testapp/model/movie_detail.dart';
+import 'package:provider/provider.dart';
+import 'package:testapp/network/bookmark.dart';
 import '../constans.dart';
 import '../model/movie.dart';
 import '../screens/movie/movie_screen.dart';
 
-class MovieItem extends StatelessWidget {
+class MovieItem extends StatefulWidget {
   const MovieItem({
     Key? key,
     required this.movie,
@@ -14,7 +16,14 @@ class MovieItem extends StatelessWidget {
   final Movie movie;
 
   @override
+  State<MovieItem> createState() => _MovieItemState();
+}
+
+class _MovieItemState extends State<MovieItem> {
+  @override
   Widget build(BuildContext context) {
+    var user = Provider.of<User?>(context);
+
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
@@ -25,7 +34,7 @@ class MovieItem extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => MovieScreen(
-                      movie: movie,
+                      movie: widget.movie,
                     )),
           );
         },
@@ -34,13 +43,13 @@ class MovieItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: movie.posterPath != ''
+              child: widget.movie.posterPath != ''
                   ? CachedNetworkImage(
                       width: 95,
                       height: 120,
                       fit: BoxFit.cover,
                       imageUrl:
-                          'https://image.tmdb.org/t/p/original/${movie.posterPath}',
+                          'https://image.tmdb.org/t/p/original/${widget.movie.posterPath}',
                       placeholder: (context, url) => Container(
                         decoration: const BoxDecoration(
                           color: kGrayColor,
@@ -67,30 +76,38 @@ class MovieItem extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    movie.title,
+                    widget.movie.title,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Text(
                     "Release Date",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(movie.releaseDate ?? movie.firstAirDate ?? 'unknown'),
+                  Text(widget.movie.releaseDate ??
+                      widget.movie.firstAirDate ??
+                      'unknown'),
                   const Text(
                     "Average Rating",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(movie.voteAverage.toString()),
+                  Text(widget.movie.voteAverage.toStringAsFixed(1)),
                 ],
               ),
             ),
             const Spacer(),
             Column(
-              children: const [
-                Icon(
-                  Icons.bookmark,
-                  color: kLightGreenColor,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (user == null) return;
+                    Bookmark().addBookmark(user.uid, widget.movie.id);
+                  },
+                  child: const Icon(
+                    Icons.bookmark,
+                    color: kLightGreenColor,
+                  ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Icon(
                     Icons.star,

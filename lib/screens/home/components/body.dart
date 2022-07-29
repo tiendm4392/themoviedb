@@ -46,7 +46,6 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     var homeModel = Provider.of<ListMovieManagement>(context, listen: false);
-
     final List<Widget> imageSliders = homeModel.getTrendingMovie
         .map(
           (item) => GestureDetector(
