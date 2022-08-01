@@ -17,15 +17,14 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   final _firestore = FirebaseFirestore.instance.collection("movie_bookmark");
   late ListMovieManagement bookmarkData;
-  late User? user;
 
   @override
   void initState() {
     super.initState();
     bookmarkData = Provider.of<ListMovieManagement>(context, listen: false);
-    user = Provider.of<User?>(context, listen: false);
+    var user = Provider.of<User?>(context, listen: false);
     if (user != null) {
-      getBookmark(user?.uid);
+      getBookmark(user.uid);
     }
   }
 
@@ -33,7 +32,7 @@ class _BodyState extends State<Body> {
     var docSnapshot = await _firestore.doc(id).get();
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
-      var value = data?['ids'].cast<int>();
+      final value = data?['ids'].cast<int>();
       await bookmarkData.fetchBookmark(ids: value);
     }
   }
@@ -68,18 +67,30 @@ class _BodyState extends State<Body> {
       )),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView.builder(
-            itemCount: movieData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: EdgeInsets.only(
-                    bottom:
-                        index + 1 == movieData.length ? kDefaultPadding : 0),
-                child: MovieItem(
-                  movie: movieData[index],
-                ),
-              );
-            }),
+        child: movieData.isEmpty
+            ? const Center(
+                child: Text(
+                'List is empty',
+                style: sectionText,
+              ))
+            : ListView.builder(
+                itemCount: movieData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: index + 1 == movieData.length
+                            ? kDefaultPadding
+                            : 0),
+                    child: MovieItem(
+                      movie: movieData[index],
+                      onPress: () {
+                        getBookmark(user?.uid);
+                        movieData.removeWhere(
+                            (item) => item.id == movieData[index].id);
+                      },
+                    ),
+                  );
+                }),
       ),
     );
   }

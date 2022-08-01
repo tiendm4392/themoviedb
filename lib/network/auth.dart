@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:testapp/components/globla_dialog.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -7,35 +9,34 @@ class Auth {
     return _auth.authStateChanges();
   }
 
-  Future<void> signUp(
-      {required String emailAddress, required String password}) async {
+  Future signUp(
+      {required String emailAddress,
+      required String password,
+      required dynamic context}) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
+      return await _auth
+          .createUserWithEmailAndPassword(
+            email: emailAddress,
+            password: password,
+          )
+          .then((value) => true);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
+      GlobalDialog()
+          .showMyDialog(context: context, message: e.message, title: 'Error');
     }
   }
 
-  Future<void> signIn(
-      {required String emailAddress, required String password}) async {
+  Future signIn(
+      {required String emailAddress,
+      required String password,
+      required dynamic context}) async {
     try {
-      await _auth.signInWithEmailAndPassword(
-          email: emailAddress, password: password);
+      return await _auth
+          .signInWithEmailAndPassword(email: emailAddress, password: password)
+          .then((value) => true);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      GlobalDialog()
+          .showMyDialog(context: context, message: e.message, title: 'Error');
     }
   }
 

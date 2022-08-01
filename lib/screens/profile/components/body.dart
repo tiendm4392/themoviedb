@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
+import 'package:testapp/model/list_movie_management.dart';
 import 'package:testapp/network/auth.dart';
 import 'package:testapp/screens/authentication/signIn/sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Body extends StatefulWidget {
   const Body({
@@ -23,6 +25,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<User?>(context);
+    var profile = Provider.of<ListMovieManagement>(context, listen: false);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
@@ -98,6 +101,7 @@ class _BodyState extends State<Body> {
           ),
           GestureDetector(
             onTap: (() {
+              profile.resetBookmark();
               Auth().signOutUser();
             }),
             child: Padding(

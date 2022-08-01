@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/constans.dart';
 import 'package:testapp/model/movie.dart';
 
 import 'components/body.dart';
@@ -26,8 +27,7 @@ class MovieScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       title: Text(
         movie.title,
-        style: const TextStyle(
-            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+        style: headerText,
       ),
     );
   }

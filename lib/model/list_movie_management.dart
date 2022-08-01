@@ -8,16 +8,17 @@ class ListMovieManagement extends ChangeNotifier {
   List<Movie> _animationMovie = [];
   List<Movie> _tvShow = [];
   List<Movie> _favorite = [];
+  List<int> _favoriteIds = [];
 
   List<Movie> get getTrendingMovie => _trendingMovie;
   List<Movie> get getActionMovie => _actionMovie;
   List<Movie> get getAnimationMovie => _animationMovie;
   List<Movie> get getTvShow => _tvShow;
   List<Movie> get getFavorite => _favorite;
+  List<int> get getFavoriteIds => _favoriteIds;
 
   Future<void> fetchAllCategory() async {
-    final trending =
-        (await NetworkRequest.getMovies(param: "trending", time: "day"))!;
+    final trending = (await NetworkRequest.getMovies())!;
     final action = (await NetworkRequest.getMovies(genres: "28"))!;
     final animation = (await NetworkRequest.getMovies(genres: "16"))!;
     final tvShow = (await NetworkRequest.getMovies(genres: "27"))!;
@@ -28,14 +29,20 @@ class ListMovieManagement extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchBookmark({required List<int> ids}) async {
+  fetchBookmark({required List<int> ids}) async {
     List<Movie> data = [];
     for (var i = 0; i < ids.length; i++) {
       final result = (await NetworkRequest.fetchMovieData(id: ids[i]))!;
       data.add(result);
     }
+    _favoriteIds = [...ids];
     _favorite = data;
     notifyListeners();
   }
 
+  resetBookmark() {
+    _favoriteIds = [];
+    _favorite = [];
+    notifyListeners();
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testapp/constans.dart';
@@ -16,6 +18,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  final _firestore = FirebaseFirestore.instance.collection("movie_bookmark");
   late ListMovieManagement homeData;
   int _current = 0;
   late bool isLoaded;
@@ -25,6 +28,15 @@ class _BodyState extends State<Body> {
     super.initState();
     homeData = Provider.of<ListMovieManagement>(context, listen: false);
     getMovies();
+  }
+
+  getBookmark(String? id) async {
+    var docSnapshot = await _firestore.doc(id).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      final value = data?['ids'].cast<int>();
+      await homeData.fetchBookmark(ids: value);
+    }
   }
 
   getMovies() async {
@@ -46,6 +58,11 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     var homeModel = Provider.of<ListMovieManagement>(context, listen: false);
+    var user = Provider.of<User?>(context);
+    if (user != null) {
+      getBookmark(user.uid);
+    }
+
     final List<Widget> imageSliders = homeModel.getTrendingMovie
         .map(
           (item) => GestureDetector(

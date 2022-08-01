@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/components/custom_bottom_tab.dart';
+import 'package:testapp/components/globla_dialog.dart';
 import 'package:testapp/components/password_field.dart';
 import 'package:testapp/constans.dart';
 import 'package:testapp/network/auth.dart';
@@ -20,22 +21,6 @@ class _SignUpState extends State<SignUp> {
   bool showPassword = false;
   bool showPasswordConfirm = false;
 
-  _createUser() async {
-    if (userName.text != '' && password.text != '') {
-      await Auth().signUp(
-          emailAddress: userName.text, password: password.text);
-      if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const MyStatefulWidget(
-                  initRoute: 3,
-                )),
-        (Route<dynamic> route) => false,
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -43,6 +28,33 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    _createUser() async {
+      if (userName.text != '' && password.text != '') {
+        if (password.text != passwordConfirm.text) {
+          GlobalDialog().showMyDialog(
+              context: context,
+              message: 'Confirm password failed. Please try again',
+              title: 'Error');
+          return;
+        }
+        final result = await Auth().signUp(
+            emailAddress: userName.text,
+            password: password.text,
+            context: context);
+        if (result != true) return;
+        print(result);
+        if (!mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const MyStatefulWidget(
+                    initRoute: 3,
+                  )),
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(),
@@ -100,7 +112,6 @@ class _SignUpState extends State<SignUp> {
                         fontSize: 18)),
               ),
             ),
-            
             Container(
               padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
               child: const Text('Need help?'),

@@ -7,14 +7,15 @@ class Bookmark {
     var docSnapshot = await _firestore.doc(id).get();
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
-      var value = data?['ids'].cast<int>();
+      final values = data?['ids'].cast<int>();
+      final check = values.remove(movieId);
       _firestore
           .doc(id)
           .set({
-            'ids': [...value, movieId],
+            'ids': check ? values : [...values, movieId],
           })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .then((value) => print(check ? "remove movie" : "add movie"))
+          .catchError((error) => print("Failed to add: $error"));
     } else {
       _firestore
           .doc(id)
@@ -22,7 +23,7 @@ class Bookmark {
             'ids': [movieId],
           })
           .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .catchError((error) => print("Failed to add : $error"));
     }
   }
 }

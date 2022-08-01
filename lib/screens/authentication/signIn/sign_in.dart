@@ -18,24 +18,27 @@ class _SignInState extends State<SignIn> {
   TextEditingController password = TextEditingController();
   bool showPassword = false;
 
-  _signInUser() async {
-    if (userName.text != '' && password.text != '') {
-      await Auth().signIn(
-          emailAddress: userName.text, password: password.text);
-      if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const MyStatefulWidget(
-                  initRoute: 3,
-                )),
-        (Route<dynamic> route) => false,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    _signInUser() async {
+      if (userName.text != '' && password.text != '') {
+        final result = await Auth().signIn(
+            emailAddress: userName.text,
+            password: password.text,
+            context: context);
+        if (result != true) return;
+        if (!mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const MyStatefulWidget(
+                    initRoute: 3,
+                  )),
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(),
@@ -70,8 +73,7 @@ class _SignInState extends State<SignIn> {
                   const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(
-                      60),
+                  minimumSize: const Size.fromHeight(60),
                 ),
                 onPressed: () {
                   _signInUser();
@@ -118,5 +120,3 @@ class _SignInState extends State<SignIn> {
     );
   }
 }
-
-

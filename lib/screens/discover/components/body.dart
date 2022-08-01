@@ -161,6 +161,7 @@ class _BodyState extends State<Body> {
                                             : 0),
                                     child: MovieItem(
                                       movie: movieData[index],
+                                      isBookmarked: true,
                                     ),
                                   );
                                 } else {

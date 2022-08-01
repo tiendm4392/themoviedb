@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testapp/components/globla_dialog.dart';
+import 'package:testapp/model/list_movie_management.dart';
 import 'package:testapp/network/bookmark.dart';
 import '../constans.dart';
 import '../model/movie.dart';
@@ -11,19 +13,46 @@ class MovieItem extends StatefulWidget {
   const MovieItem({
     Key? key,
     required this.movie,
+    this.onPress,
+    this.isBookmarked,
   }) : super(key: key);
 
   final Movie movie;
+  final Function? onPress;
+  final bool? isBookmarked;
 
   @override
   State<MovieItem> createState() => _MovieItemState();
 }
 
 class _MovieItemState extends State<MovieItem> {
+  late ListMovieManagement listBookMark;
+  late bool check = true;
+  @override
+  void initState() {
+    super.initState();
+    listBookMark = Provider.of<ListMovieManagement>(context, listen: false);
+    setCheck();
+  }
+
+  setCheck() {
+    if (mounted) {
+      setState(() {
+        check = listBookMark.getFavoriteIds.contains(widget.movie.id);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // var result = Provider.of<ListMovieManagement>(context, listen: false);
+    // var movieData = result.getFavoriteIds;
     var user = Provider.of<User?>(context);
-
+    if (user == null && mounted) {
+      setState(() {
+        check = false;
+      });
+    }
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
@@ -33,9 +62,10 @@ class _MovieItemState extends State<MovieItem> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => MovieScreen(
-                      movie: widget.movie,
-                    )),
+              builder: (context) => MovieScreen(
+                movie: widget.movie,
+              ),
+            ),
           );
         },
         child: Row(
@@ -98,13 +128,29 @@ class _MovieItemState extends State<MovieItem> {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    if (user == null) return;
-                    Bookmark().addBookmark(user.uid, widget.movie.id);
-                  },
-                  child: const Icon(
+                  onTap: user == null
+                      ? () {
+                          GlobalDialog().showMyDialog(
+                              context: context,
+                              message:
+                                  'Please sign in to use this feature',
+                              title: 'Note');
+                        }
+                      : () async {
+                          await Bookmark()
+                              .addBookmark(user.uid, widget.movie.id);
+                          if (widget.isBookmarked != null) {
+                            setState(() {
+                              check = !check;
+                            });
+                          }
+                          if (widget.onPress != null) {
+                            widget.onPress!();
+                          }
+                        },
+                  child: Icon(
                     Icons.bookmark,
-                    color: kLightGreenColor,
+                    color: check ? kLightGreenColor : kGrayColor,
                   ),
                 ),
                 const Padding(

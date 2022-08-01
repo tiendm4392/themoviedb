@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/constans.dart';
 import 'package:testapp/screens/bookmark/components/body.dart';
 
 class BookmarkScreen extends StatelessWidget {
@@ -19,8 +20,7 @@ class BookmarkScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       title: const Text(
         "Bookmark",
-        style: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+        style: headerText,
       ),
     );
   }
